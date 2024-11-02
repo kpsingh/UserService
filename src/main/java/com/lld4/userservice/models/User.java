@@ -13,7 +13,7 @@ import java.util.List;
 public class User extends BaseModel {
     private String name;
     private String email;
-    private String password;
+    private String hashedPassword;
     @ManyToMany
     private List<Role> roles;
     private boolean isEmailVerified;

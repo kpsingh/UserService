@@ -5,7 +5,6 @@ import com.lld4.userservice.models.User;
 import com.lld4.userservice.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.context.annotation.Primary;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -40,7 +39,7 @@ public class UserService implements IUserService {
             user = new User();
             user.setEmail(email);
             // password needs to be encripted before saving into database
-            user.setPassword(bCryptPasswordEncoder.encode(password));
+            user.setHashedPassword(bCryptPasswordEncoder.encode(password));
             user.setName(name);
             user = userRepository.save(user);
         }
