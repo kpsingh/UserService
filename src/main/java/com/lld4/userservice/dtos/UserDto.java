@@ -1,7 +1,7 @@
 package com.lld4.userservice.dtos;
 
 import com.lld4.userservice.models.Role;
-import com.lld4.userservice.models.Long;
+import com.lld4.userservice.models.User;
 import jakarta.persistence.ManyToMany;
 import lombok.Getter;
 import lombok.Setter;
@@ -21,7 +21,7 @@ public class UserDto {
 
     /* This is the best practice to out converted/mapped at the DTO class itself. Take the user as inout and
     translate it into the UserDto */
-    public static UserDto from(Long user) {
+    public static UserDto from(User user) {
         UserDto userDto = new UserDto();
         userDto.setEmail(user.getEmail());
         userDto.setName(user.getName());

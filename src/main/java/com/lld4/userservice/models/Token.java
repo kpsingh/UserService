@@ -12,7 +12,6 @@ import java.util.Date;
 @Setter
 public class Token extends BaseModel {
     private String value;
-    @ManyToOne
     private Long userid;
     private Date expiryDate;
     private boolean isExpired;

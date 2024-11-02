@@ -1,7 +1,8 @@
 package com.lld4.userservice.services;
 
 import com.lld4.userservice.models.Token;
-import com.lld4.userservice.models.Long;
+import com.lld4.userservice.models.User;
+import com.lld4.userservice.repositories.TokenRepository;
 import com.lld4.userservice.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,25 +19,27 @@ public class UserService implements IUserService {
     private final Logger logger = LoggerFactory.getLogger(UserService.class);
     private UserRepository userRepository;
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+    private TokenRepository tokenRepository;
 
 
-    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepository userRepository, BCryptPasswordEncoder bCryptPasswordEncoder, TokenRepository tokenRepository) {
         this.userRepository = userRepository;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.tokenRepository = tokenRepository;
     }
 
     @Override
-    public Long registerUser(String email, String password, String name) {
+    public User registerUser(String email, String password, String name) {
         // validate of the use already exist of not
-        Optional<Long> userOptional = userRepository.findByEmail(email);
-        Long user = null;
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        User user = null;
         if (userOptional.isPresent()) {
             logger.info("User already exists"); // we can throw user already exist message to user
             user = userOptional.get();
 
         } else {
             logger.info("User not found");
-            user = new Long();
+            user = new User();
             user.setEmail(email);
             // password needs to be encripted before saving into database
             user.setHashedPassword(bCryptPasswordEncoder.encode(password));
@@ -51,21 +54,21 @@ public class UserService implements IUserService {
     @Override
     public Token login(String email, String password) {
         // validate the used and generate the token and return back to user;
-        Optional<Long> userOptional = userRepository.findByEmail(email);
-        Long user = null;
+        Optional<User> userOptional = userRepository.findByEmail(email);
+        User user = null;
         if (userOptional.isPresent()) {
             user = userOptional.get();
             if (bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
-                    Token token = new Token();
-                    token.setUser(user);
-                    token.setValue("Bearer " + user.getHashedPassword());
-                    token.setIssuedDate(new Date()); // token creation date
+                Token token = new Token();
+                token.setUserid(user.getId());
+                token.setValue("Bearer " + user.getHashedPassword());
+                token.setIssuedDate(new Date()); // token creation date
 
-                    Date date = new Date();
-                    date.setTime(date.getTime() + 30 + 24 * 60 * 60 * 1000);
+                Date date = new Date();
+                date.setTime(date.getTime() + 30 + 24 * 60 * 60 * 1000);
+                token.setExpiryDate(date); // expiry date 30 days after creation
 
-                    token.setExpiryDate(date); // expiry date 30 days after creation
-                    return token;
+                return tokenRepository.save(token);
             } else {
                 throw new BadCredentialsException("Invalid password");
             }
@@ -75,7 +78,13 @@ public class UserService implements IUserService {
     }
 
     @Override
-    public Void logout(String token) {
+    public Void logout(String tokenValue) {
+        Optional<Token> tokenOptional = tokenRepository.findByValue(tokenValue);
+        if (tokenOptional.isPresent()) {
+            Token token = tokenOptional.get();
+            token.setExpired(Boolean.TRUE);
+            tokenRepository.save(token);
+        }
         return null;
     }
 }

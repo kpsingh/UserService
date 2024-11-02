@@ -13,8 +13,8 @@ public class UserExceptionAdvices {
     @ExceptionHandler(BadCredentialsException.class)
     public ResponseEntity<String> invalidCredentials(BadCredentialsException badCredentialsException) {
 
-        return new ResponseEntity<>(badCredentialsException.getMessage(),
-                HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(badCredentialsException.getMessage(), HttpStatus.BAD_REQUEST);
+
 
     }
 }

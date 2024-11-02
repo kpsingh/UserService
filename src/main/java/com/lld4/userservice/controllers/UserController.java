@@ -4,7 +4,7 @@ import com.lld4.userservice.dtos.LoginUserRequestDto;
 import com.lld4.userservice.dtos.RegisterUserRequestDto;
 import com.lld4.userservice.dtos.UserDto;
 import com.lld4.userservice.models.Token;
-import com.lld4.userservice.models.Long;
+import com.lld4.userservice.models.User;
 import com.lld4.userservice.services.IUserService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -25,7 +25,7 @@ public class UserController {
 
     @PostMapping("/register") // localhost:8080/users/register
     public UserDto register(@RequestBody RegisterUserRequestDto registerUserRequestDto) {
-        Long user = userService.registerUser(
+        User user = userService.registerUser(
                 registerUserRequestDto.getEmail(),
                 registerUserRequestDto.getPassword(),
                 registerUserRequestDto.getName());
