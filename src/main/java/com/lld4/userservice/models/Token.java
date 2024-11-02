@@ -13,7 +13,7 @@ import java.util.Date;
 public class Token extends BaseModel {
     private String value;
     @ManyToOne
-    private User user;
+    private Long userid;
     private Date expiryDate;
     private boolean isExpired;
     private Date issuedDate;
