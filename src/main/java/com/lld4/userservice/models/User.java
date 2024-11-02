@@ -16,7 +16,8 @@ public class User extends BaseModel {
     private String hashedPassword;
     @ManyToMany
     private List<Role> roles;
-    private boolean isEmailVerified;
+    private Boolean isEmailVerified;
+    private Boolean isDeleted;
 
 
 }
