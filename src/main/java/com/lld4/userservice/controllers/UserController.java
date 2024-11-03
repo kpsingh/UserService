@@ -40,7 +40,6 @@ public class UserController {
             throw new BadCredentialsException("Invalid email");
         }
         return  token;
-
     }
 
     @PostMapping("/logout") // localhost:8080/users/logout

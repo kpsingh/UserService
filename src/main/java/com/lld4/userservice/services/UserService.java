@@ -59,15 +59,7 @@ public class UserService implements IUserService {
         if (userOptional.isPresent()) {
             user = userOptional.get();
             if (bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
-                Token token = new Token();
-                token.setUserid(user.getId());
-                token.setValue("Bearer " + user.getHashedPassword());
-                token.setIssuedDate(new Date()); // token creation date
-
-                Date date = new Date();
-                date.setTime(date.getTime() + 30 + 24 * 60 * 60 * 1000);
-                token.setExpiryDate(date); // expiry date 30 days after creation
-
+                Token token = Token.create(user);
                 return tokenRepository.save(token);
             } else {
                 throw new BadCredentialsException("Invalid password");

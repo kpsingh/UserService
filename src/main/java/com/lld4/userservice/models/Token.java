@@ -17,4 +17,17 @@ public class Token extends BaseModel {
     private boolean isExpired;
     private Date issuedDate;
 
+    public static Token create(User user) {
+        Token token = new Token();
+        token.setUserid(user.getId());
+        token.setValue("MyToken " + user.getHashedPassword());
+
+        Date date = new Date();
+        token.setIssuedDate(date); // token creation date
+
+        date.setTime(date.getTime() + 30 + 24 * 60 * 60 * 1000);
+        token.setExpiryDate(date); // expiry date 30 days after creation
+
+        return token;
+    }
 }
