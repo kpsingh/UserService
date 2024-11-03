@@ -27,10 +27,7 @@ public class UserController {
 
     @PostMapping("/register") // localhost:8080/users/register
     public UserDto register(@RequestBody RegisterUserRequestDto registerUserRequestDto) {
-        User user = userService.registerUser(
-                registerUserRequestDto.getEmail(),
-                registerUserRequestDto.getPassword(),
-                registerUserRequestDto.getName());
+        User user = userService.registerUser(registerUserRequestDto.getEmail(), registerUserRequestDto.getPassword(), registerUserRequestDto.getName());
 
         return UserDto.from(user); // best practice to put mapping logic in dto class itself
     }
@@ -48,5 +45,16 @@ public class UserController {
     public ResponseEntity<String> logout(@RequestBody Token token) {
         userService.logout(token.getValue());
         return new ResponseEntity<>("Logout successful", HttpStatus.OK);
+    }
+
+    /*
+        If validate toekn simply return true/false that may not be much useful, instead if token valid fetch the user detials
+        so that you know what all roles that use have and based on the you can authorise the resources after the validation
+     */
+
+    @PostMapping("/validateToken")
+    public UserDto validateToken(@RequestBody Token token) {
+        User user = userService.validateToken(token.getValue());
+        return UserDto.from(user);
     }
 }

@@ -88,4 +88,14 @@ public class UserService implements IUserService {
         tokenRepository.save(token);
         return null;
     }
+
+    @Override
+    public User validateToken(String token) {
+        Optional<Token> optionalToken = tokenRepository.findByValueAndIsDeleted(token, Boolean.FALSE);
+        if (optionalToken.isEmpty()) {
+            logger.info("Token not found");
+            throw new InvalidTokenException("Not a valid token");
+        }
+        return optionalToken.get().getUser();
+    }
 }
