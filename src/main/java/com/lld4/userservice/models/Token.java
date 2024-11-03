@@ -4,7 +4,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.ManyToOne;
 import lombok.Getter;
 import lombok.Setter;
+import org.apache.commons.lang3.RandomStringUtils;
 
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.Date;
 
 @Entity
@@ -18,15 +21,15 @@ public class Token extends BaseModel {
     private Date issuedDate;
 
     public static Token create(User user) {
+        LocalDate now = LocalDate.now();
+        LocalDate thirtyDayFromNow = now.plusDays(30);
+        Date expirayDate = Date.from(thirtyDayFromNow.atStartOfDay(ZoneId.systemDefault()).toInstant());
+
         Token token = new Token();
+        token.setExpiryDate(expirayDate);
+        // token value are randemoly generated 128 bits string
+        token.setValue(RandomStringUtils.secure().nextAlphanumeric(128));
         token.setUserid(user.getId());
-        token.setValue("MyToken " + user.getHashedPassword());
-
-        token.setIssuedDate(new Date()); // token creation date
-
-        Date date = new Date();
-        date.setTime(date.getTime() + 30 + 24 * 60 * 60 * 1000);
-        token.setExpiryDate(date); // expiry date 30 days after creation
 
         return token;
     }

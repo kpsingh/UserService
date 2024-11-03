@@ -7,6 +7,7 @@ import com.lld4.userservice.repositories.UserRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -53,20 +54,21 @@ public class UserService implements IUserService {
 
     @Override
     public Token login(String email, String password) {
-        // validate the used and generate the token and return back to user;
+        /* check if user exist with the given email or not. If not throw an exception or redirect the use to signup
+         * If user exist then compare the incoming password with the hashed password stored into the database using match algorithms
+         * If password matched then login sucefull and return token otherwise throw the invalid credential exception
+         * */
         Optional<User> userOptional = userRepository.findByEmail(email);
-        User user = null;
-        if (userOptional.isPresent()) {
-            user = userOptional.get();
-            if (bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
-                Token token = Token.create(user);
-                return tokenRepository.save(token);
-            } else {
-                throw new BadCredentialsException("Invalid password");
-            }
-
+        if (userOptional.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with given email");
         }
-        return null;
+        User user = userOptional.get();
+        if (!bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
+            throw new BadCredentialsException("Invalid password");
+        }
+        Token token = Token.create(user);
+        // once we got the token then save that token into the token table and then return
+        return tokenRepository.save(token);
     }
 
     @Override

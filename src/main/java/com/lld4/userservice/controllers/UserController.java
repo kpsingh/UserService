@@ -1,11 +1,13 @@
 package com.lld4.userservice.controllers;
 
+import com.lld4.userservice.dtos.LoginResponseDto;
 import com.lld4.userservice.dtos.LoginUserRequestDto;
 import com.lld4.userservice.dtos.RegisterUserRequestDto;
 import com.lld4.userservice.dtos.UserDto;
 import com.lld4.userservice.models.Token;
 import com.lld4.userservice.models.User;
 import com.lld4.userservice.services.IUserService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -34,17 +36,17 @@ public class UserController {
     }
 
     @PostMapping("/login") // localhost:8080/users/login
-    public Token login(@RequestBody LoginUserRequestDto loginUserRequestDto) {
-        Token token = userService.login(loginUserRequestDto.getEmail(), loginUserRequestDto.getPassword());
+    public LoginResponseDto login(@RequestBody LoginUserRequestDto loginRequest) {
+        Token token = userService.login(loginRequest.getEmail(), loginRequest.getPassword());
         if (token == null) {
             throw new BadCredentialsException("Invalid email");
         }
-        return  token;
+        return LoginResponseDto.from(token);
     }
 
     @PostMapping("/logout") // localhost:8080/users/logout
-    public ResponseEntity<Void> logout(@RequestBody Token token) {
+    public ResponseEntity<String> logout(@RequestBody Token token) {
         userService.logout(token.getValue());
-        return ResponseEntity.noContent().build();
+        return new ResponseEntity<>("Logout successful", HttpStatus.OK);
     }
 }
