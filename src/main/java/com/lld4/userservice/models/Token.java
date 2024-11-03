@@ -17,7 +17,6 @@ public class Token extends BaseModel {
     private String value;
     private Long userid;
     private Date expiryDate;
-    private boolean isExpired;
     private Date issuedDate;
 
     public static Token create(User user) {

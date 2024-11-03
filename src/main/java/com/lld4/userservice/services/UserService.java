@@ -1,5 +1,6 @@
 package com.lld4.userservice.services;
 
+import com.lld4.userservice.exceptions.InvalidTokenException;
 import com.lld4.userservice.models.Token;
 import com.lld4.userservice.models.User;
 import com.lld4.userservice.repositories.TokenRepository;
@@ -73,12 +74,18 @@ public class UserService implements IUserService {
 
     @Override
     public Void logout(String tokenValue) {
-        Optional<Token> tokenOptional = tokenRepository.findByValue(tokenValue);
-        if (tokenOptional.isPresent()) {
-            Token token = tokenOptional.get();
-            token.setExpired(Boolean.TRUE);
-            tokenRepository.save(token);
+        /*
+            check if the given token is valid and not expired and is deleted is false
+         */
+        Optional<Token> optionalToken = tokenRepository.findByValueAndIsDeleted(tokenValue, Boolean.FALSE);
+
+        if (optionalToken.isEmpty()) {
+            throw new InvalidTokenException("Not a valid token");
         }
+
+        Token token = optionalToken.get();
+        token.setIsDeleted(Boolean.TRUE);
+        tokenRepository.save(token);
         return null;
     }
 }
