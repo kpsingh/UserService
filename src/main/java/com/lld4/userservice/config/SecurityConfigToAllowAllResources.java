@@ -6,7 +6,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
-public class SecurityConfig {
+public class SecurityConfigToAllowAllResources {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -15,8 +15,8 @@ public class SecurityConfig {
                 {
                     try {
                         requests.anyRequest().permitAll()
-                                .and().cors().disable()
-                                .csrf().disable();
+                                .and().cors().disable()// Cross-Origin Resource Sharing (CORS)
+                                .csrf().disable(); // Cross Site Request Forgery (CSRF)
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
