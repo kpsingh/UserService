@@ -12,7 +12,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.Optional;
 
 @Service
@@ -57,7 +56,7 @@ public class UserService implements IUserService {
     public Token login(String email, String password) {
         /* check if user exist with the given email or not. If not throw an exception or redirect the use to signup
          * If user exist then compare the incoming password with the hashed password stored into the database using match algorithms
-         * If password matched then login sucefull and return token otherwise throw the invalid credential exception
+         * If password matched then login successful and return token otherwise throw the invalid credential exception
          * */
         Optional<User> userOptional = userRepository.findByEmail(email);
         if (userOptional.isEmpty()) {
@@ -67,7 +66,7 @@ public class UserService implements IUserService {
         if (!bCryptPasswordEncoder.matches(password, user.getHashedPassword())) {
             throw new BadCredentialsException("Invalid password");
         }
-        Token token = Token.create(user);
+        Token token = Token.generateToken(user);
         // once we got the token then save that token into the token table and then return
         return tokenRepository.save(token);
     }

@@ -20,7 +20,7 @@ public class Token extends BaseModel {
     private Date expiryDate;
     private Date issuedDate;
 
-    public static Token create(User user) {
+    public static Token generateToken(User user) {
         LocalDate now = LocalDate.now();
         Date issuedDate = Date.from(now.atStartOfDay(ZoneId.systemDefault()).toInstant());
 
