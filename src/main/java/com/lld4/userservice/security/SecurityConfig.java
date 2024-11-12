@@ -84,7 +84,7 @@ public class SecurityConfig {
     public UserDetailsService userDetailsService() {
         UserDetails userDetails = //User.withDefaultPasswordEncoder()
                 User.withUsername("user")
-                .password("$2a$12$ir5q7NO1yxG/yR4otqql4eBjDwVbk7A/eI0ihDA6QP1Y7INU3YuYm")
+                .password("$2a$12$ksWdqxsZ0.ONxoTLnW56Iuy8.yq9I3geyiOC.rDBK1twBhvmG4cjG") // password
                 .roles("USER")
                 .build();
 
