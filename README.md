@@ -26,3 +26,18 @@ It handles **registration, login, JWT token generation, and role-based access co
 ### Locally
 ```bash
 mvn spring-boot:run
+
+**## Docket**
+Configuration
+
+DB: MySQL
+
+JWT Secret from environment variable
+
+Port: 8081
+
+Future Improvements
+
+Add multi-factor authentication (MFA)
+
+Add forgot/reset password feature
