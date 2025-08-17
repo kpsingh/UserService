@@ -1,29 +1,28 @@
-# UserService
+# User Service
 
-If your local branch is one commit behind the `main` branch and you want to pull the latest changes while keeping your local changes, you can use `git pull --rebase`. This command will apply your local changes on top of the latest changes from `main`, making the history cleaner.
+## Overview
+The User Service manages customer and admin accounts, authentication, and authorization.  
+It handles **registration, login, JWT token generation, and role-based access control**.
 
-Here’s how to do it:
+## Features
+- User registration with email/phone
+- Secure login with JWT authentication
+- Role management: CUSTOMER, ADMIN
+- Password hashing with BCrypt
 
-1. First, make sure you are on your local branch:
-   ```bash
-   git checkout your-branch-name
-   ```
+## Tech Stack
+- Java 17, Spring Boot
+- Spring Security, JWT
+- Spring Data JPA + MySQL (RDS)
+- Dockerized microservice
 
-2. Pull and rebase with the `main` branch:
-   ```bash
-   git pull --rebase origin main
-   ```
+## API Endpoints
+- `POST /api/users/register` – Register a new user
+- `POST /api/users/login` – Authenticate user and return JWT
+- `GET /api/users/{id}` – Get user profile
+- `DELETE /api/users/{id}` – Delete a user (Admin only)
 
-   This command will pull the latest changes from the `main` branch and then apply your local commits on top of the changes from `main`.
-
-3. If there are any conflicts, Git will prompt you to resolve them. Once resolved, you can continue the rebase by running:
-   ```bash
-   git rebase --continue
-   ```
-
-4. After completing the rebase, push your changes to your remote branch. You may need to use `--force-with-lease` if you have rewritten the commit history:
-   ```bash
-   git push --force-with-lease
-   ```
-
-This process will leave you with a linear commit history that includes both `main` branch changes and your local changes.
+## How to Run
+### Locally
+```bash
+mvn spring-boot:run
